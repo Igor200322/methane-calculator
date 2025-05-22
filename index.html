@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Калькулятор економії метану</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label, input { display: block; margin: 10px 0; }
+        input[type=number] { width: 200px; padding: 5px; }
+        button { padding: 10px 15px; margin-top: 10px; cursor: pointer; }
+        #resultButton {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            display: none;
+            padding: 10px 15px;
+            margin-top: 10px;
+        }
+        #details {
+            margin-top: 15px;
+            display: none;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f2f2f2;
+            width: fit-content;
+        }
+    </style>
+</head>
+<body>
+    <h1>Калькулятор економії метану</h1>
+
+    <label>Витрата пропану (л/100 км): <input type="number" id="propaneUsage" value="12" required></label>
+    <label>Ціна пропану (грн/л): <input type="number" id="propanePrice" value="20" required></label>
+
+    <label>Витрата метану (м³/100 км): <input type="number" id="methaneUsage" value="10" required></label>
+    <label>Ціна метану (грн/м³): <input type="number" id="methanePrice" value="18" required></label>
+
+    <label>Дистанція поїздки (км): <input type="number" id="distance" value="100" required></label>
+
+    <button onclick="calculateSavings()">Розрахувати економію</button>
+    <button id="resultButton"></button>
+
+    <div id="details"></div>
+
+    <script>
+        function calculateSavings() {
+            const propaneUsage = parseFloat(document.getElementById("propaneUsage").value) || 0;
+            const propanePrice = parseFloat(document.getElementById("propanePrice").value) || 0;
+            const methaneUsage = parseFloat(document.getElementById("methaneUsage").value) || 0;
+            const methanePrice = parseFloat(document.getElementById("methanePrice").value) || 0;
+            const distance = parseFloat(document.getElementById("distance").value) || 0;
+
+            if (propaneUsage > 0 && propanePrice > 0 && methaneUsage > 0 && methanePrice > 0 && distance > 0) {
+                const propaneCost = (propaneUsage * propanePrice / 100) * distance;
+                const methaneCost = (methaneUsage * methanePrice / 100) * distance;
+                const savings = propaneCost - methaneCost;
+
+                document.getElementById("resultButton").innerText = 
+                    "Економія: " + savings.toFixed(2) + " грн на " + distance + " км";
+                document.getElementById("resultButton").style.display = "inline-block";
+
+                document.getElementById("details").innerHTML = `
+                    🔸 Вартість поїздки на пропані: <b>${propaneCost.toFixed(2)} грн</b><br>
+                    🔹 Вартість поїздки на метані: <b>${methaneCost.toFixed(2)} грн</b><br>
+                    ✅ Економія: <b>${savings.toFixed(2)} грн</b>
+                `;
+                document.getElementById("details").style.display = "block";
+            } else {
+                alert("Будь ласка, введіть всі значення більше нуля.");
+            }
+        }
+    </script>
+</body>
+</html>
